@@ -1,5 +1,6 @@
 import { PaymentDetails, PaymentMethod } from '../../app/payment/PaymentDetails';
 import { PaymentService } from '../../app/payment/PaymentService';
+import { PaymentAdapter } from '../../app/payment/PaymentAdapter';
 
 describe('Payment Service', () => {
   const paymentAdapterMock = {
@@ -14,28 +15,35 @@ describe('Payment Service', () => {
   test('should successfully process a valid payment', () => {
     // Arrange
     //TODO: Create paymentDetails object initialized with fake data
+    const mockPaymentDetails: PaymentDetails = { amount: 50, currency: 'tnd', method: PaymentMethod.CreditCard };
     //TODO: Create mockProcessPaymentResponse object containing success status and a fake transactiondId
+    const mockProcessPaymentResponse :{ status: string, transactionId: string } = { status: 'success', transactionId: 'txn_1234567890' };
     //TODO: Mock processPayment implementation
+    paymentAdapterMock.processPayment.mockImplementation((mockPaymentDetails: PaymentDetails) => mockProcessPaymentResponse);
+
+
     // Act
-    //const result = paymentService.makePayment(paymentDetails);
+    const result = paymentService.makePayment(mockPaymentDetails);
     // Assert
     // Check the returned result is equal to the success message returned by makePayment with thefake  transactionId you have defined in mockProcessPaymentResponse
+        expect(result).toEqual(`Payment successful. Transaction ID: ${mockProcessPaymentResponse.transactionId}`);
     // Check that processPayment inside makePayment has been called with paymentDetails
+        expect(paymentAdapterMock.processPayment).toHaveBeenCalledWith(mockPaymentDetails);
   });
 
-  test('should throw an error for payment failure', () => {
-    // Arrange
-    //TODO: Create paymentDetails object initialized with fake data
-    //TODO: Create mockProcessPaymentResponse object containing failure status
-    //TODO: Mock processPayment implementation
-    // Act & Assert
-    //expect(() => paymentService.makePayment(paymentDetails)).toThrow('Payment failed');
-  });
+  // test('should throw an error for payment failure', () => {
+  //   // Arrange
+  //   //TODO: Create paymentDetails object initialized with fake data
+  //   //TODO: Create mockProcessPaymentResponse object containing failure status
+  //   //TODO: Mock processPayment implementation
+  //   // Act & Assert
+  //   //expect(() => paymentService.makePayment(paymentDetails)).toThrow('Payment failed');
+  // });
 
-  test('should throw an error for invalid payment amount', () => {
-    // Arrange
-    //TODO: Create paymentDetails object initialized with fake data where amount should be negative or undefined
-    // Act & Assert
-    //expect(() => paymentService.makePayment(paymentDetails)).toThrow('Invalid payment amount');
-  });
+  // test('should throw an error for invalid payment amount', () => {
+  //   // Arrange
+  //   //TODO: Create paymentDetails object initialized with fake data where amount should be negative or undefined
+  //   // Act & Assert
+  //   //expect(() => paymentService.makePayment(paymentDetails)).toThrow('Invalid payment amount');
+  // });
 });
