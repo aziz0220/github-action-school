@@ -5,7 +5,7 @@ on:
     inputs:
       deploy:
         type: boolean
-        description: Deploy To DockeHub
+        description: Deploy To DockerHub
         default: false
 jobs:
   lint-and-test:
