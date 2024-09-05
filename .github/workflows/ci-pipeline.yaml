@@ -2,7 +2,11 @@ name: CI Pipeline
 
 on:
   workflow_dispatch:
-
+    inputs:
+      deploy:
+        type: boolean
+        description: Deploy To DockeHub
+        default: false
 jobs:
   lint-and-test:
     name: Linting and testing
@@ -32,6 +36,7 @@ jobs:
   build-and-push:
     name: Build and push docker image
     runs-on: ubuntu-latest
+    if: ${{ inputs.deploy }}
     needs: lint-and-test
     steps:
       - name: Checkout
